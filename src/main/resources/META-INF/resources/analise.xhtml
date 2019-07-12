@@ -12,66 +12,63 @@
 
 <h:body>
 	<h:form id="form">
-		<p:growl globalOnly="true" life="1500">
-			<p:autoUpdate />
-		</p:growl>
 
 		<div class="panel-analise">
 
 			<h:panelGrid columns="2">
 
 				<h:outputLabel value="Nome" />
-				<p:inputText value="#{analiseController.cliente.nome}"
-					required="true" />
+				<p:inputText value="#{analiseController.cliente.nome}" />
 
-				<h:outputLabel value="Cpf" />
-				<p:inputMask mask="999.999.999-99" autoClear="true" required="true"
+				<h:outputLabel value="CPF" />
+				<p:inputMask mask="999.999.999-99"
 					value="#{analiseController.cliente.cpf}" />
 
 				<h:outputLabel value="Idade" />
-				<p:inputText value="#{analiseController.cliente.idade}"
-					required="true">
-					<f:convertNumber integerOnly="true" maxIntegerDigits="2" />
+				<p:inputText value="#{analiseController.cliente.idade}">
 				</p:inputText>
 
 				<h:outputLabel value="Sexo" />
-				<p:selectOneMenu value="#{analiseController.cliente.sexo}"
-					required="true">
-					<f:selectItem itemLabel="Sexo" noSelectionOption="true" />
+				<h:selectOneMenu value="#{analiseController.cliente.sexo}">
 					<f:selectItem itemLabel="Masculino" itemValue="M" />
 					<f:selectItem itemLabel="Feminino" itemValue="F" />
-				</p:selectOneMenu>
+				</h:selectOneMenu>
 
 				<h:outputLabel value="Estado Civil" />
-				<p:selectOneMenu value="#{analiseController.cliente.estadoCivil}"
-					required="true">
-					<f:selectItem itemLabel="Estado civil" noSelectionOption="true" />
+				<h:selectOneMenu value="#{analiseController.cliente.estadoCivil}">
 					<f:selectItem itemLabel="Solteiro" itemValue="solteiro" />
 					<f:selectItem itemLabel="Casado" itemValue="casado" />
 					<f:selectItem itemLabel="Divorciado" itemValue="Divorciado" />
 					<f:selectItem itemLabel="Viuvo" itemValue="Viuvo" />
-				</p:selectOneMenu>
+				</h:selectOneMenu>
 
 				<h:outputLabel value="Estado(Sigla)" />
-				<p:inputText value="#{analiseController.cliente.estado}"
-					required="true" />
+				<p:inputText value="#{analiseController.cliente.estado}" />
 
 				<h:outputLabel value="Dependentes" />
-				<p:inputText value="#{analiseController.cliente.dependentes}"
-					required="true">
-					<f:convertNumber integerOnly="true" maxIntegerDigits="2" />
+				<p:inputText value="#{analiseController.cliente.dependentes}">
 				</p:inputText>
 
 				<h:outputLabel value="Renda" />
-				<p:inputText value="#{analiseController.cliente.renda}"
-					required="true">
-					<f:convertNumber type="currency" />
+				<p:inputText value="#{analiseController.cliente.renda}">
 				</p:inputText>
 
 			</h:panelGrid>
 
-			<p:commandButton process="@form" value="Analisar"
-				action="#{analiseController.analisar}" />
+
+			<p:messages showDetail="true" showSummary="true">
+				<p:autoUpdate />
+			</p:messages>
+
+			<p:spacer width="100%" height="5"></p:spacer>
+			<p:commandButton value="Analisar" update="@form" process="@form"
+				style="width:100%" action="#{analiseController.analisar}" />
+
+			<p:spacer width="100%" height="5"></p:spacer>
+
+			<p:commandButton value="Verificar Proposta" update="@form"
+				process="@form" style="width:100%"
+				action="#{analiseController.pesquisar}" />
 
 
 		</div>

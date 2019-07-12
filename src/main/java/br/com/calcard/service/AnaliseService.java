@@ -22,24 +22,27 @@ import br.com.calcard.dto.PropostaResultDTO;
 @Service
 public class AnaliseService {
 
-	private final static String URL = "http://localhost:8082/cliente/analisar";
+	private final static String URL_BASE = "http://localhost:8082/cliente";
+	private final static String ANALISAR_PATH = "/analisar";
+	private final static String PESQUISAR_PATH = "/consultar/";
 
 	public PropostaResultDTO analisar(ClienteDTO clienteDTO) throws Exception {
 
 		try (CloseableHttpClient httpClient = HttpClients.createMinimal()) {
+			
 			RequestConfig requestConfig = RequestConfig.custom() //
 					.setSocketTimeout(120_000) //
 					.setConnectTimeout(30_000) //
 					.build();
-
+			
 			HttpUriRequest post = RequestBuilder.post() //
-					.setUri(URL) //
+					.setUri(URL_BASE + ANALISAR_PATH) //
 					.addHeader("Content-Type", "application/json") //
 					.setCharset(StandardCharsets.UTF_8) //
 					.setEntity(new StringEntity(new Gson().toJson(clienteDTO), StandardCharsets.UTF_8.name())) //
 					.setConfig(requestConfig) //
 					.build();
-
+			
 			CloseableHttpResponse response = null;
 			try {
 				response = httpClient.execute(post);
@@ -59,4 +62,45 @@ public class AnaliseService {
 			throw e;
 		}
 	}
+
+	public PropostaResultDTO consultarProposta(ClienteDTO clienteDTO) throws Exception {
+		
+		try (CloseableHttpClient httpClient = HttpClients.createMinimal()) {
+			
+			RequestConfig requestConfig = RequestConfig.custom() //
+					.setSocketTimeout(120_000) //
+					.setConnectTimeout(30_000) //
+					.build();
+			
+			HttpUriRequest get = RequestBuilder.get() //
+					.setUri(URL_BASE + PESQUISAR_PATH + clienteDTO.getCpf()) //
+					.addHeader("Content-Type", "application/json") //
+					.setCharset(StandardCharsets.UTF_8) //
+					.setConfig(requestConfig) //
+					.build();
+			
+			CloseableHttpResponse response = null;
+			try {
+				response = httpClient.execute(get);
+				String messageBody = null;
+				HttpEntity entity = response.getEntity();
+				
+				if (entity != null) {
+					messageBody = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name());
+					EntityUtils.consume(entity);
+					return new Gson().fromJson(messageBody, PropostaResultDTO.class);
+				} else {
+					return new PropostaResultDTO("Cliente nao cadastrado", "");
+				}
+				
+			} finally {
+				if (response != null) {
+					response.close();
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 }
