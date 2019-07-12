@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Proposta Cartão</title>
+	<h:outputStylesheet library="css" name="layout.css" />
+</h:head>
+
+<h:body>
+	<h:form id="form">
+		<p:growl globalOnly="true" life="1500">
+			<p:autoUpdate />
+		</p:growl>
+
+		<div class="panel-analise">
+
+			<h:panelGrid columns="2">
+
+				<h:outputLabel value="Nome" />
+				<p:inputText value="#{analiseController.cliente.nome}"
+					required="true" />
+
+				<h:outputLabel value="Cpf" />
+				<p:inputMask mask="999.999.999-99" autoClear="true" required="true"
+					value="#{analiseController.cliente.cpf}" />
+
+				<h:outputLabel value="Idade" />
+				<p:inputText value="#{analiseController.cliente.idade}"
+					required="true">
+					<f:convertNumber integerOnly="true" maxIntegerDigits="2" />
+				</p:inputText>
+
+				<h:outputLabel value="Sexo" />
+				<p:selectOneMenu value="#{analiseController.cliente.sexo}"
+					required="true">
+					<f:selectItem itemLabel="Sexo" noSelectionOption="true" />
+					<f:selectItem itemLabel="Masculino" itemValue="M" />
+					<f:selectItem itemLabel="Feminino" itemValue="F" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Estado Civil" />
+				<p:selectOneMenu value="#{analiseController.cliente.estadoCivil}"
+					required="true">
+					<f:selectItem itemLabel="Estado civil" noSelectionOption="true" />
+					<f:selectItem itemLabel="Solteiro" itemValue="solteiro" />
+					<f:selectItem itemLabel="Casado" itemValue="casado" />
+					<f:selectItem itemLabel="Divorciado" itemValue="Divorciado" />
+					<f:selectItem itemLabel="Viuvo" itemValue="Viuvo" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Estado(Sigla)" />
+				<p:inputText value="#{analiseController.cliente.estado}"
+					required="true" />
+
+				<h:outputLabel value="Dependentes" />
+				<p:inputText value="#{analiseController.cliente.dependentes}"
+					required="true">
+					<f:convertNumber integerOnly="true" maxIntegerDigits="2" />
+				</p:inputText>
+
+				<h:outputLabel value="Renda" />
+				<p:inputText value="#{analiseController.cliente.renda}"
+					required="true">
+					<f:convertNumber type="currency" />
+				</p:inputText>
+
+			</h:panelGrid>
+
+			<p:commandButton process="@form" value="Analisar"
+				action="#{analiseController.analisar}" />
+
+
+		</div>
+
+	</h:form>
+</h:body>
+</html>

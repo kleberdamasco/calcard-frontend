@@ -1,0 +1,62 @@
+package br.com.calcard.service;
+
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+
+import br.com.calcard.dto.ClienteDTO;
+import br.com.calcard.dto.PropostaResultDTO;
+
+@Service
+public class AnaliseService {
+
+	private final static String URL = "http://localhost:8082/cliente/analisar";
+
+	public PropostaResultDTO analisar(ClienteDTO clienteDTO) throws Exception {
+
+		try (CloseableHttpClient httpClient = HttpClients.createMinimal()) {
+			RequestConfig requestConfig = RequestConfig.custom() //
+					.setSocketTimeout(120_000) //
+					.setConnectTimeout(30_000) //
+					.build();
+
+			HttpUriRequest post = RequestBuilder.post() //
+					.setUri(URL) //
+					.addHeader("Content-Type", "application/json") //
+					.setCharset(StandardCharsets.UTF_8) //
+					.setEntity(new StringEntity(new Gson().toJson(clienteDTO), StandardCharsets.UTF_8.name())) //
+					.setConfig(requestConfig) //
+					.build();
+
+			CloseableHttpResponse response = null;
+			try {
+				response = httpClient.execute(post);
+				String messageBody = null;
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					messageBody = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name());
+					EntityUtils.consume(entity);
+				}
+				return new Gson().fromJson(messageBody, PropostaResultDTO.class);
+			} finally {
+				if (response != null) {
+					response.close();
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+}
